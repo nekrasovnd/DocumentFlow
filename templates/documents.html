@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block content %}
+<h2 class="mb-4">Документы</h2>
+
+{% if documents %}
+<div class="table-responsive">
+    <table class="table table-hover">
+        <thead class="table-dark">
+            <tr>
+                <th>#</th>
+                <th>Имя файла</th>
+                <th>Дата загрузки</th>
+                <th>Автор</th>
+                <th>SHA-256</th>
+                <th>Статус подписи</th>
+                <th>Действия</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for doc in documents %}
+            <tr>
+                <td>{{ doc.id }}</td>
+                <td>{{ doc.filename }}</td>
+                <td>{{ doc.upload_date }}</td>
+                <td>{{ doc.author_name }}</td>
+                <td><code>{{ doc.checksum }}</code></td>
+                <td>
+                    {% if doc.is_signed %}
+                        <span class="badge bg-success">Подписан: {{ doc.signer_name }}</span>
+                        <br><small class="text-muted">{{ doc.signed_at }}</small>
+                    {% else %}
+                        <span class="badge bg-secondary">Не подписан</span>
+                    {% endif %}
+                </td>
+                <td>
+                    <div class="btn-group btn-group-sm">
+                        <a href="{{ url_for('download_document', doc_id=doc.id) }}" class="btn btn-outline-primary">Скачать</a>
+                        {% if not doc.is_signed %}
+                        <form action="{{ url_for('sign_doc', doc_id=doc.id) }}" method="POST" style="display:inline;">
+                            <button type="submit" class="btn btn-outline-success"
+                                    onclick="return confirm('Подписать документ «{{ doc.filename }}»?')">
+                                Подписать
+                            </button>
+                        </form>
+                        {% endif %}
+                        {% if doc.is_signed %}
+                        <a href="{{ url_for('verify_doc', doc_id=doc.id) }}" class="btn btn-outline-info">Проверить</a>
+                        {% endif %}
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<div class="alert alert-info">
+    Документов пока нет. <a href="{{ url_for('upload_document') }}">Загрузите первый документ</a>.
+</div>
+{% endif %}
+{% endblock %}

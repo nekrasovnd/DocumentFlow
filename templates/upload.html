@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <h3 class="card-title mb-4">Загрузка документа</h3>
+                <form method="POST" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <label for="document" class="form-label">Выберите файл</label>
+                        <input type="file" class="form-control" id="document" name="document" required>
+                        <div class="form-text">Допустимые форматы: PDF, DOCX, XLSX, TXT, PNG, JPG, DOC</div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Загрузить</button>
+                    <a href="{{ url_for('documents_list') }}" class="btn btn-secondary">Отмена</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
