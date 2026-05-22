@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card mb-4">
+            <div class="card-body">
+                <h3 class="card-title">Открытый ключ RSA-2048</h3>
+                <pre class="bg-light p-3" style="font-size: 0.8em; overflow-x: auto;">{{ public_key }}</pre>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-body">
+                <h3 class="card-title">Сертификат X.509</h3>
+                <pre class="bg-light p-3" style="font-size: 0.8em; overflow-x: auto;">{{ certificate }}</pre>
+            </div>
+        </div>
+        <div class="mt-3">
+            <a href="{{ url_for('documents_list') }}" class="btn btn-primary">Назад к списку</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

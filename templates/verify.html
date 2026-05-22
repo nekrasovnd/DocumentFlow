@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-body">
+                <h3 class="card-title mb-4">Результат верификации подписи</h3>
+
+                <table class="table">
+                    <tr>
+                        <th>Документ</th>
+                        <td>{{ doc.filename }}</td>
+                    </tr>
+                    <tr>
+                        <th>Подписал</th>
+                        <td>{{ sig_info.signer_name }}</td>
+                    </tr>
+                    <tr>
+                        <th>Дата подписания</th>
+                        <td>{{ sig_info.signed_at }}</td>
+                    </tr>
+                    <tr>
+                        <th>SHA-256 (оригинал)</th>
+                        <td><code>{{ original_checksum }}</code></td>
+                    </tr>
+                    <tr>
+                        <th>SHA-256 (текущий)</th>
+                        <td><code>{{ current_checksum }}</code></td>
+                    </tr>
+                    <tr>
+                        <th>Целостность файла</th>
+                        <td>
+                            {% if checksum_match %}
+                                <span class="badge bg-success">Файл не изменён</span>
+                            {% else %}
+                                <span class="badge bg-danger">Файл был изменён!</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                </table>
+
+                <div class="mt-4">
+                    {% if is_valid %}
+                        <div class="alert alert-success">
+                            <h4>Подпись действительна</h4>
+                            <p>Электронная подпись документа «{{ doc.filename }}» корректна.
+                            Документ подписан пользователем «{{ sig_info.signer_name }}»
+                            и не был изменён после подписания.</p>
+                            <p><strong>Алгоритм:</strong> RSA-PSS, SHA-256</p>
+                        </div>
+                    {% else %}
+                        <div class="alert alert-danger">
+                            <h4>Подпись недействительна</h4>
+                            <p>Документ «{{ doc.filename }}» был изменён после подписания
+                            или подпись повреждена. Содержимое документа не соответствует
+                            электронной подписи.</p>
+                        </div>
+                    {% endif %}
+                </div>
+
+                <a href="{{ url_for('documents_list') }}" class="btn btn-primary">Назад к списку</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
